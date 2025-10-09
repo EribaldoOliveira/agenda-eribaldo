@@ -1,0 +1,190 @@
+/* style.css */
+:root{
+  --primary:#0078d7;
+  --bg:#f5f7fb;
+  --card:#ffffff;
+  --danger:#e74c3c;
+}
+
+*{box-sizing:border-box;}
+html,body{height:100%;}
+body{
+  margin:0;
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  background:var(--bg);
+  color:#222;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+/* Topbar */
+.topbar{
+  width:100%;
+  max-width:1000px;
+  padding:12px;
+  background:var(--primary);
+  color:white;
+  border-radius:8px;
+  margin:14px 12px 6px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  align-items:center;
+}
+.topbar h1{margin:0;font-size:1.2rem}
+.controls{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+}
+.controls button{
+  border:0;
+  background:white;
+  color:var(--primary);
+  padding:8px 10px;
+  border-radius:6px;
+  cursor:pointer;
+  font-weight:600;
+}
+.controls .primary{background:var(--primary);color:white}
+.controls .primary:hover{filter:brightness(.95)}
+.controls button:hover{opacity:.9}
+.mes-ano{font-weight:700;color:white;font-size:1rem;padding:4px 8px}
+
+/* Weekdays */
+.container{width:100%;max-width:1000px;padding:10px}
+.weekdays{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:6px}
+.weekdays div{
+  text-align:center;
+  font-weight:700;
+  color:#555;
+  background:transparent;
+}
+
+/* Calendário */
+.calendario{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:8px;
+}
+.dia{
+  background:var(--card);
+  padding:6px;
+  border-radius:8px;
+  min-height:80px;
+  border:1px solid #e3e7ee;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  cursor:pointer;
+  overflow:hidden;
+}
+.dia .numero{
+  font-weight:700;
+  color:var(--primary);
+  font-size:0.95rem;
+}
+.eventos-list{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  margin-top:2px;
+  font-size:0.75rem;
+}
+.evento-item{
+  display:flex;
+  gap:6px;
+  align-items:center;
+  padding:4px 6px;
+  border-radius:6px;
+  background:#eef8ff;
+  border-left:4px solid var(--primary);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.mais-eventos{
+  font-size:0.7rem;
+  color:#555;
+}
+.dia.hoje{box-shadow:0 0 0 2px rgba(0,120,215,.12)}
+
+/* Modal */
+.modal{
+  position:fixed;
+  inset:0;
+  display:none;
+  justify-content:center;
+  align-items:flex-start;
+  padding:40px 16px;
+  background:rgba(0,0,0,0.35);
+  z-index:60;
+}
+.modal-card{
+  width:100%;
+  max-width:720px;
+  background:var(--card);
+  border-radius:10px;
+  padding:16px;
+  box-shadow:0 12px 30px rgba(0,0,0,.15);
+  display:grid;
+  grid-template-columns:1fr 360px;
+  gap:16px;
+  position:relative;
+}
+.close{
+  position:absolute;
+  right:10px;
+  top:10px;
+  border:0;
+  background:transparent;
+  font-size:18px;
+  cursor:pointer;
+}
+.lista-dia{
+  padding:4px;
+  max-height:520px;
+  overflow:auto;
+}
+.comp-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+  padding:8px;
+  border-radius:8px;
+  background:#f6f9ff;
+  margin-bottom:8px;
+}
+.comp-item .left{display:flex;gap:8px;align-items:center}
+.comp-time{font-weight:700;color:var(--primary);min-width:62px}
+.comp-actions button{border:0;background:transparent;cursor:pointer;padding:6px}
+
+/* Form */
+.form-evento{
+  padding:8px;
+  border-left:1px dashed #eee;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.form-evento input[type="text"],
+.form-evento input[type="date"],
+.form-evento input[type="time"]{
+  padding:8px;
+  border-radius:6px;
+  border:1px solid #ddd;
+  width:100%;
+}
+.form-actions{display:flex;gap:8px;justify-content:flex-end}
+.primary{background:var(--primary);color:white;border-radius:6px;padding:8px 12px;border:0;cursor:pointer}
+.danger{background:var(--danger);color:white;border-radius:6px;padding:8px 12px;border:0;cursor:pointer}
+
+/* Responsivo */
+@media (max-width:900px){
+  .modal-card{grid-template-columns:1fr;max-width:480px}
+  .container{padding:6px}
+}

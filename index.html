@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Agenda Eribaldo</title>
+
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/style.css">
+  <meta name="theme-color" content="#0078d7">
+  <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
+  <script src="js/script.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <h1>📅 Minha Agenda</h1>
+    <div class="controls">
+      <button id="prevBtn" aria-label="Mês anterior">◀</button>
+      <div id="mesAno" class="mes-ano" aria-live="polite"></div>
+      <button id="nextBtn" aria-label="Próximo mês">▶</button>
+      <button id="abrirNovo" class="primary">+ Novo</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <div id="weekdays" class="weekdays"></div>
+    <div id="calendario" class="calendario"></div>
+  </main>
+
+  <!-- Modal de visualização/edição -->
+  <div id="modal" class="modal" aria-hidden="true">
+    <div class="modal-card">
+      <button id="closeModal" class="close" aria-label="Fechar modal">✕</button>
+      <h2 id="modalTitle">Compromissos</h2>
+
+      <!-- Lista de compromissos do dia -->
+      <div id="listaDia" class="lista-dia"></div>
+
+      <hr>
+
+      <!-- Formulário -->
+      <form id="formEvento" class="form-evento">
+        <h3 id="formTitulo">Novo compromisso</h3>
+        <label for="inputTitulo">Título</label>
+        <input id="inputTitulo" type="text" placeholder="Ex: Reunião com cliente" required>
+
+        <label for="inputData">Data</label>
+        <input id="inputData" type="date" required>
+
+        <label for="inputHora">Hora</label>
+        <input id="inputHora" type="time" required>
+
+        <div class="form-actions">
+          <button type="submit" class="primary">Salvar</button>
+          <button type="button" id="btnCancelarForm">Cancelar</button>
+          <button type="button" id="btnExcluir" class="danger" style="display:none">Excluir</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <small>Arquivos salvos no seu navegador (localStorage). Funciona offline se instalado como PWA.</small>
+  </footer>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js').catch(()=>{});
+    }
+  </script>
+</body>
+</html>
