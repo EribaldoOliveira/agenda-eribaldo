@@ -70,18 +70,21 @@ body{
   grid-template-columns:repeat(7,1fr);
   gap:8px;
 }
-.dia{
-  background:var(--card);
-  padding:6px;
-  border-radius:8px;
-  min-height:80px;
-  border:1px solid #e3e7ee;
-  display:flex;
-  flex-direction:column;
-  gap:4px;
-  cursor:pointer;
-  overflow:hidden;
+/* Quadrinhos do calendário */
+.dia {
+  background: var(--card);
+  padding: 6px;
+  border-radius: 8px;
+  min-height: 80px;       /* mantém tamanho mínimo */
+  max-height: 80px;       /* altura fixa para não deformar a grade */
+  border: 1px solid #e3e7ee;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+  overflow: hidden;       /* não mostra scroll dentro do quadrinho */
 }
+
 .dia .numero{
   font-weight:700;
   color:var(--primary);
@@ -144,10 +147,11 @@ body{
   font-size:18px;
   cursor:pointer;
 }
-.lista-dia{
-  padding:4px;
-  max-height:520px;
-  overflow:auto;
+/* Container de eventos dentro do modal */
+.lista-dia {
+  padding: 8px;
+  max-height: 400px;       /* altura máxima do modal para eventos */
+  overflow-y: auto;        /* scroll vertical se houver muitos compromissos */
 }
 .comp-item{
   display:flex;
