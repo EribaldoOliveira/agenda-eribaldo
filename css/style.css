@@ -1,9 +1,26 @@
-/* style.css */
 :root{
   --primary:#0078d7;
   --bg:#f5f7fb;
   --card:#ffffff;
   --danger:#e74c3c;
+  --text:#222;
+}
+
+body.dark-mode {
+  --primary: #3399ff;
+  --bg: #1e1e1e;
+  --card: #2c2c2c;
+  --danger: #e74c3c;
+  --text: #eee;
+}
+
+body, .topbar, .dia, .modal-card, .comp-item {
+  transition: background 0.3s, color 0.3s;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
 }
 
 *{box-sizing:border-box;}
@@ -11,8 +28,6 @@ html,body{height:100%;}
 body{
   margin:0;
   font-family: "Segoe UI", Roboto, Arial, sans-serif;
-  background:var(--bg);
-  color:#222;
   display:flex;
   flex-direction:column;
   align-items:center;
@@ -57,61 +72,26 @@ body{
 /* Weekdays */
 .container{width:100%;max-width:1000px;padding:10px}
 .weekdays{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:6px}
-.weekdays div{
-  text-align:center;
-  font-weight:700;
-  color:#555;
-  background:transparent;
-}
+.weekdays div{text-align:center;font-weight:700;color:#555;background:transparent;}
 
 /* Calendário */
-.calendario{
-  display:grid;
-  grid-template-columns:repeat(7,1fr);
-  gap:8px;
-}
-/* Quadrinhos do calendário */
-.dia {
+.calendario{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;}
+.dia{
   background: var(--card);
   padding: 6px;
   border-radius: 8px;
-  min-height: 80px;       /* mantém tamanho mínimo */
-  max-height: 80px;       /* altura fixa para não deformar a grade */
+  min-height: 100px;
   border: 1px solid #e3e7ee;
   display: flex;
   flex-direction: column;
   gap: 4px;
   cursor: pointer;
-  overflow: hidden;       /* não mostra scroll dentro do quadrinho */
+  overflow-y: auto;
 }
-.dia .numero{
-  font-weight:700;
-  color:var(--primary);
-  font-size:0.95rem;
-}
-.eventos-list{
-  display:flex;
-  flex-direction:column;
-  gap:2px;
-  margin-top:2px;
-  font-size:0.75rem;
-}
-.evento-item{
-  display:flex;
-  gap:6px;
-  align-items:center;
-  padding:4px 6px;
-  border-radius:6px;
-  background:#eef8ff;
-  border-left:4px solid var(--primary);
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-.mais-eventos{
-  font-size:0.7rem;
-  color:#555;
-}
+.dia .numero{font-weight:700;color:var(--primary);font-size:0.95rem;}
+.eventos-list{display:flex;flex-direction:column;gap:2px;margin-top:2px;font-size:0.75rem;}
+.evento-item{display:flex;gap:6px;align-items:center;padding:4px 6px;border-radius:6px;background:#eef8ff;border-left:4px solid var(--primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.mais-eventos{font-size:0.7rem;color:#555;}
 .dia.hoje{box-shadow:0 0 0 2px rgba(0,120,215,.12)}
 
 /* Modal */
@@ -136,25 +116,14 @@ body{
   grid-template-columns: 1fr 360px;
   gap: 16px;
   position: relative;
-  max-height: 80vh;      /* limita altura ao tamanho da tela */
+  max-height: 80vh;
 }
-
-.lista-dia {
+.lista-dia{
   padding: 8px;
-  overflow-y: auto;
-  max-height: calc(80vh - 32px);  /* 32px = padding do modal */
+  overflow-y:auto;
+  max-height: calc(80vh - 32px);
 }
-
-.comp-item{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:8px;
-  padding:8px;
-  border-radius:8px;
-  background:#f6f9ff;
-  margin-bottom:8px;
-}
+.comp-item{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px;border-radius:8px;background:#f6f9ff;margin-bottom:8px;}
 .comp-item .left{display:flex;gap:8px;align-items:center}
 .comp-time{font-weight:700;color:var(--primary);min-width:62px}
 .comp-actions button{border:0;background:transparent;cursor:pointer;padding:6px}
@@ -192,31 +161,23 @@ body{
   border-radius:8px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.08);
 }
-.footer a{
-  color: var(--primary);
-  text-decoration:none;
-  font-weight:600;
-  transition: color 0.2s;
-}
-.footer a:hover{
-  color: #005bb5;
-  text-decoration:underline;
-}
+.footer a{color: var(--primary);text-decoration:none;font-weight:600;transition: color 0.2s;}
+.footer a:hover{color: #005bb5;text-decoration:underline;}
 .footer strong{color: var(--primary);}
-.btn-whatsapp{
-  display: inline-block;
-  background: #25D366;
-  color: white;
-  font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 6px;
-  text-decoration: none;
-  font-size: 0.8rem;
-  transition: background 0.2s, transform 0.1s;
-}
-.btn-whatsapp:hover{
-  background: #1ebe57;
-  transform: translateY(-1px);
+.btn-whatsapp{display: inline-block;background: #25D366;color: white;font-weight: 600;padding: 4px 10px;border-radius: 6px;text-decoration: none;font-size: 0.8rem;transition: background 0.2s, transform 0.1s;}
+.btn-whatsapp:hover{background: #1ebe57;transform: translateY(-1px);}
+
+/* Toggle Dark */
+#toggleDark{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  z-index:100;
+  padding:10px 14px;
+  border-radius:50px;
+  font-weight:600;
+  cursor:pointer;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
 /* Responsivo */
@@ -224,18 +185,32 @@ body{
   .modal-card{grid-template-columns:1fr;max-width:480px}
   .container{padding:6px}
 }
-
-/* Scroll completo do modal em celular */
 @media (max-width:480px){
   .modal-card{
     display:flex;
     flex-direction:column;
-    max-height:90vh;  /* limita altura total do modal */
-    overflow-y:auto;  /* scroll vertical se exceder */
+    max-height:90vh;
+    overflow-y:auto;
     padding:12px;
   }
-  .lista-dia,
-  .form-evento{
-    max-height:none;  /* permite crescer livremente */
-  }
+  .lista-dia,.form-evento{max-height:none;}
+}
+
+#listaEventosMes {
+  margin-top: 15px;
+  text-align: left;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.evento-item {
+  background: #f7f9fc;
+  padding: 8px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.evento-item strong {
+  color: #0056d6;
 }

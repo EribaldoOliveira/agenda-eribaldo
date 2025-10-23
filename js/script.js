@@ -257,5 +257,214 @@ abrirNovoBtn.addEventListener("click", ()=> abrirModalParaData(toYMD(new Date())
 prevBtn.addEventListener("click", ()=>{ exibicao.setMonth(exibicao.getMonth()-1); renderCalendar(); });
 nextBtn.addEventListener("click", ()=>{ exibicao.setMonth(exibicao.getMonth()+1); renderCalendar(); });
 
+const toggleDarkBtn = document.getElementById("toggleDark");
+
+toggleDarkBtn.addEventListener("click", () => {
+  document.body.classList.toggle("dark-mode");
+  
+  // opcional: salvar preferência no localStorage
+  if(document.body.classList.contains("dark-mode")){
+    localStorage.setItem("darkMode", "true");
+  } else {
+    localStorage.setItem("darkMode", "false");
+  }
+});
+
+// Ao carregar a página, aplica a preferência salva
+if(localStorage.getItem("darkMode") === "true"){
+  document.body.classList.add("dark-mode");
+}
+
 renderWeekdays();
 renderCalendar();
+
+const verMesBtn = document.getElementById("verMes");
+const modalMes = document.getElementById("modalMes");
+const closeModalMes = document.getElementById("closeModalMes");
+const listaMesEl = document.getElementById("listaMes");
+const modalMesTitle = document.getElementById("modalMesTitle");
+
+function abrirModalMes(){
+  modalMes.style.display = "flex";
+  modalMes.setAttribute("aria-hidden","false");
+  
+  const mes = exibicao.getMonth();
+  const ano = exibicao.getFullYear();
+  modalMesTitle.textContent = `Eventos de ${MONTHS_PT[mes].charAt(0).toUpperCase()+MONTHS_PT[mes].slice(1)} ${ano}`;
+  
+  listaMesEl.innerHTML = "";
+
+  // filtra eventos do mês
+  const eventosDoMes = eventos.filter(ev => {
+    const d = new Date(ev.date + "T00:00:00");
+    return d.getMonth() === mes && d.getFullYear() === ano;
+  }).sort((a,b)=>a.date.localeCompare(b.date) || a.time.localeCompare(b.time));
+
+  if(eventosDoMes.length === 0){
+    const p = document.createElement("div");
+    p.textContent = "Nenhum compromisso neste mês.";
+    listaMesEl.appendChild(p);
+    return;
+  }
+
+  // agrupar por dia
+  const grouped = {};
+  eventosDoMes.forEach(ev => {
+    if(!grouped[ev.date]) grouped[ev.date] = [];
+    grouped[ev.date].push(ev);
+  });
+
+  Object.keys(grouped).sort().forEach(ymd => {
+    const header = document.createElement("div");
+    header.className = "dia-header";
+    header.textContent = formatDataTitulo(ymd);
+    listaMesEl.appendChild(header);
+
+    grouped[ymd].forEach(ev => {
+      const div = document.createElement("div");
+      div.className = "comp-item";
+      div.innerHTML = `
+        <div class="left">
+          <div class="comp-time">${ev.time}</div>
+          <div class="comp-title">${ev.title}</div>
+        </div>
+        <div class="comp-actions">
+          <button title="Editar" data-id="${ev.id}" class="btn-edit">✏️</button>
+          <button title="Excluir" data-id="${ev.id}" class="btn-del">🗑️</button>
+        </div>
+      `;
+      div.querySelector(".btn-edit").addEventListener("click", e=>{
+        e.stopPropagation();
+        fecharModalMes();
+        abrirModalParaData(ev.date, ev.id);
+      });
+      div.querySelector(".btn-del").addEventListener("click", e=>{
+        e.stopPropagation();
+        if(confirm("Deseja excluir este compromisso?")){
+          eventos = eventos.filter(x=>x.id!==ev.id);
+          salvarEventos();
+          abrirModalMes(); // atualizar lista do mês
+          renderCalendar(); // atualizar calendário
+        }
+      });
+      listaMesEl.appendChild(div);
+    });
+  });
+}
+
+function fecharModalMes(){
+  modalMes.style.display="none";
+  modalMes.setAttribute("aria-hidden","true");
+}
+
+// eventos
+verMesBtn.addEventListener("click", abrirModalMes);
+closeModalMes.addEventListener("click", fecharModalMes);
+modalMes.addEventListener("click", e=>{
+  if(e.target===modalMes) fecharModalMes();
+});
+
+const selectMes = document.getElementById("selectMes");
+const selectAno = document.getElementById("selectAno");
+const btnFiltrarMes = document.getElementById("btnFiltrarMes");
+
+function popularSelects(){
+  selectMes.innerHTML = "";
+  MONTHS_PT.forEach((m,i)=>{
+    const option = document.createElement("option");
+    option.value = i;
+    option.textContent = m.charAt(0).toUpperCase()+m.slice(1);
+    selectMes.appendChild(option);
+  });
+
+  selectAno.innerHTML = "";
+  const anoAtual = new Date().getFullYear();
+  for(let a = anoAtual-5; a <= anoAtual+2; a++){
+    const option = document.createElement("option");
+    option.value = a;
+    option.textContent = a;
+    selectAno.appendChild(option);
+  }
+}
+
+function abrirModalMes(){
+  modalMes.style.display = "flex";
+  modalMes.setAttribute("aria-hidden","false");
+
+  popularSelects();
+
+  // preenche selects com mês/ano do calendário atual
+  selectMes.value = exibicao.getMonth();
+  selectAno.value = exibicao.getFullYear();
+
+  atualizarListaMes();
+}
+
+function atualizarListaMes(){
+  const mes = parseInt(selectMes.value);
+  const ano = parseInt(selectAno.value);
+
+  modalMesTitle.textContent = `Eventos de ${MONTHS_PT[mes].charAt(0).toUpperCase()+MONTHS_PT[mes].slice(1)} ${ano}`;
+  listaMesEl.innerHTML = "";
+
+  const eventosDoMes = eventos.filter(ev => {
+    const d = new Date(ev.date + "T00:00:00");
+    return d.getMonth() === mes && d.getFullYear() === ano;
+  }).sort((a,b)=>a.date.localeCompare(b.date) || a.time.localeCompare(b.time));
+
+  if(eventosDoMes.length === 0){
+    const p = document.createElement("div");
+    p.textContent = "Nenhum compromisso neste mês.";
+    listaMesEl.appendChild(p);
+    return;
+  }
+
+  const grouped = {};
+  eventosDoMes.forEach(ev => {
+    if(!grouped[ev.date]) grouped[ev.date] = [];
+    grouped[ev.date].push(ev);
+  });
+
+  Object.keys(grouped).sort().forEach(ymd => {
+    const header = document.createElement("div");
+    header.className = "dia-header";
+    header.textContent = formatDataTitulo(ymd);
+    listaMesEl.appendChild(header);
+
+    grouped[ymd].forEach(ev => {
+      const div = document.createElement("div");
+      div.className = "comp-item";
+      div.innerHTML = `
+        <div class="left">
+          <div class="comp-time">${ev.time}</div>
+          <div class="comp-title">${ev.title}</div>
+        </div>
+        <div class="comp-actions">
+          <button title="Editar" data-id="${ev.id}" class="btn-edit">✏️</button>
+          <button title="Excluir" data-id="${ev.id}" class="btn-del">🗑️</button>
+        </div>
+      `;
+      div.querySelector(".btn-edit").addEventListener("click", e=>{
+        e.stopPropagation();
+        fecharModalMes();
+        abrirModalParaData(ev.date, ev.id);
+      });
+      div.querySelector(".btn-del").addEventListener("click", e=>{
+        e.stopPropagation();
+        if(confirm("Deseja excluir este compromisso?")){
+          eventos = eventos.filter(x=>x.id!==ev.id);
+          salvarEventos();
+          atualizarListaMes();
+          renderCalendar();
+        }
+      });
+      listaMesEl.appendChild(div);
+    });
+  });
+}
+
+btnFiltrarMes.addEventListener("click", atualizarListaMes);
+
+// selectMes.addEventListener("change", atualizarListaMes);
+// selectAno.addEventListener("change", atualizarListaMes);
+
